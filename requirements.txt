@@ -1,0 +1,33 @@
+# Wolf CLI - AI Tool with Vision & Tool Calling
+# Core CLI framework
+click>=8.1.7
+rich>=13.7.0
+prompt-toolkit>=3.0.43
+python-dotenv>=1.0.0
+
+# HTTP & Web
+requests>=2.31.0
+httpx>=0.27.0
+
+# LLM & AI providers
+aiohttp>=3.9.3
+
+# Data parsing & processing
+pyyaml>=6.0.1
+jsonschema>=4.21.1
+xmltodict>=0.13.0
+python-dateutil>=2.8.2
+pytz>=2024.1
+
+# Tools & utilities
+duckduckgo-search>=5.1.0
+psutil>=5.9.8
+pyperclip>=1.8.2
+tqdm>=4.66.2
+tenacity>=8.2.3
+send2trash>=1.8.2
+pillow>=10.2.0
+rapidfuzz>=3.6.1
+
+# Optional OCR
+# pytesseract>=0.3.10

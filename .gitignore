@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+wolf-cli.log
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Launcher scripts
+wolf.sh
+
+# Test files (generated during testing)
+hello.txt
+test.txt
+auto-test.txt
+
+# Environment variables
+.env
+.env.local
+
+# Config (keep the example, ignore local overrides)
+.wolf-cli-config.json
