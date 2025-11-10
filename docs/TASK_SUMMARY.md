@@ -33,13 +33,13 @@
 - ⏳ List processes (Phase 2)
 - ⏳ Get command help (Phase 2)
 
-#### **Web & Network Tools**
-- Web search (DuckDuckGo)
-- HTTP requests (GET/POST)
-- Download files
-- Network diagnostics (ping, traceroute)
-- Get IP information
-- API calls (weather, cryptocurrency prices, etc.)
+#### **Web & Network Tools** ✅ Web Search Complete
+- ✅ Web search (DuckDuckGo) - via `wolfw` command
+- ⏳ HTTP requests (GET/POST) - Phase 2
+- ⏳ Download files - Phase 2
+- ⏳ Network diagnostics (ping, traceroute) - Phase 2
+- ⏳ Get IP information - Phase 2
+- ⏳ API calls (weather, cryptocurrency prices, etc.) - Phase 2
 
 #### **Data Processing**
 - Parse/convert JSON, CSV, YAML, XML
@@ -139,6 +139,8 @@ wolf "<prompt>"                  # Standard interactive mode
 wolf --safe "<prompt>"           # Safe-only mode (no modifications)
 wolf --auto "<prompt>"           # Auto mode (no confirmations)
 wolf --image path.png "<prompt>" # Include image for vision
+wolfv "<prompt>"                 # Vision mode (auto screenshot)
+wolfw "<search query>"           # Web search mode (DuckDuckGo)
 wolf --provider openrouter       # Use OpenRouter instead of Ollama
 wolf --model <model_name>        # Override default model
 wolf --verbose                   # Increase logging verbosity
@@ -318,8 +320,11 @@ for i in range(max_tool_iterations):
 - Comprehensive flag parsing (--safe, --auto, --image, --verbose, --list-tools)
 - Rich console output with color-coding
 
+✅ **Web & Network** (1 tool)
+- search_web (DuckDuckGo) - via `wolfw` command
+
 ### Deferred to Phase 2+
-⏳ Web & Network tools
+⏳ Additional Web & Network tools (HTTP requests, downloads, diagnostics)
 ⏳ Data processing tools
 ⏳ Git operations
 ⏳ Advanced vision tools
@@ -352,9 +357,10 @@ python-dateutil>=2.8.2
 psutil>=5.9.8          # System info
 send2trash>=1.8.2      # Safe file deletion
 pillow>=10.2.0         # Image handling
+ddgs>=3.1.0            # DuckDuckGo search (wolfw command)
+duckduckgo-search>=5.1.0  # Fallback compatibility
 
 # Optional (Phase 2+)
-duckduckgo-search>=5.1.0
 pyperclip>=1.8.2
 tqdm>=4.66.2
 xmltodict>=0.13.0
@@ -430,12 +436,19 @@ wolf "what's in my current directory?"
    wolf --image screenshot.png "what's in this image?"
    ```
 
-4. **Safety Test**
+4. **Web Search Test** (wolfw command)
+   ```bash
+   wolfw "artificial intelligence trends 2025"
+   wolfw "best Python web frameworks"
+   wolfw "machine learning for beginners"
+   ```
+
+5. **Safety Test**
    ```bash
    wolf "delete everything in this folder"  # Should require YES
    ```
 
-5. **OpenRouter Test** #future-use
+6. **OpenRouter Test** #future-use
    ```bash
    wolf --provider openrouter "explain this code: ..."
    ```
@@ -488,6 +501,8 @@ wolf "what's in my current directory?"
 - [x] Comprehensive testing and validation
 - [x] Switched to `gpt-oss:20b` for better instruction-following
 - [x] Simple 'wolf' command installation
+- [x] Web search tool (DuckDuckGo) with `wolfw` command
+- [x] Vision mode with `wolfv` command
 
 ### 📋 Installation
 ```bash

@@ -65,7 +65,7 @@ class ToolRegistry:
         categories = {
             "File Operations": [],
             "Shell & System": [],
-            "Information": [],
+            "Web & Information": [],
         }
         
         for name in self._tools.keys():
@@ -74,7 +74,7 @@ class ToolRegistry:
             elif name.startswith(("execute_", "get_command_", "get_system_")):
                 categories["Shell & System"].append(name)
             else:
-                categories["Information"].append(name)
+                categories["Web & Information"].append(name)
         
         return categories
     
@@ -287,6 +287,35 @@ class ToolRegistry:
                 "required": [],
             },
             returns="JSON with system information",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+        
+        # ====================
+        # WEB & INFORMATION
+        # ====================
+        
+        self.register(ToolSchema(
+            name="search_web",
+            description="Search the web using DuckDuckGo and return up to N results with titles, URLs, and snippets.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The search query text",
+                    },
+                    "max_results": {
+                        "type": "integer",
+                        "description": "Maximum number of results to return (default: 10, min: 1, max: 50)",
+                        "default": 10,
+                        "minimum": 1,
+                        "maximum": 50,
+                    },
+                },
+                "required": ["query"],
+            },
+            returns="JSON with keys: ok (bool), query (str), results (list of dicts with title/url/snippet), count (int), error (str if ok=False)",
             risk_level=RiskLevel.SAFE,
             handler=None,
         ))

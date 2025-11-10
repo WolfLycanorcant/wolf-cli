@@ -20,7 +20,8 @@ python-dateutil>=2.8.2
 pytz>=2024.1
 
 # Tools & utilities
-duckduckgo-search>=5.1.0
+ddgs>=3.1.0  # DuckDuckGo search (formerly duckduckgo-search)
+duckduckgo-search>=5.1.0  # Fallback for compatibility
 psutil>=5.9.8
 pyperclip>=1.8.2
 tqdm>=4.66.2

@@ -165,6 +165,34 @@ wolf 'hello'  # This restores the previous model
 
 **Note:** Each `wolfv` invocation captures a new screenshot, so you can track changes over time.
 
+### Web Search Mode with `wolfw`
+
+The `wolfw` command performs DuckDuckGo web searches and has the LLM synthesize and summarize the results:
+
+```bash
+# Search the web for a topic
+wolfw "artificial intelligence trends 2025"
+
+# Ask a question that requires web research
+wolfw "what are the best Python web frameworks in 2024?"
+
+# Multi-word queries work naturally
+wolfw "machine learning best practices"
+```
+
+**How it works:**
+- Automatically searches DuckDuckGo for up to 10 results by default
+- Returns results with titles, URLs, and snippets
+- LLM synthesizes findings into a clear, organized summary
+- Includes source URLs and key takeaways
+- No confirmation prompts required (safe read-only operation)
+
+**Features:**
+- Fast, privacy-respecting searches via DuckDuckGo
+- Intelligent result summarization by LLM
+- Graceful fallback if no results found
+- Respects system prompt and model settings
+
 ---
 
 ## 🎯 Examples
@@ -206,6 +234,28 @@ wolf 'create a file named test.txt with \'hello\', then read it back to me'
 
 # Complex workflows
 wolf 'list all .py files, then create a summary.txt with their names'
+```
+
+### Web Search & Research
+
+```bash
+# Search for latest technology trends
+wolfw "artificial intelligence trends 2025"
+
+# Compare programming frameworks
+wolfw "best Python web frameworks comparison"
+
+# Find solutions and best practices
+wolfw "how to optimize database queries"
+
+# Research specific topics
+wolfw "machine learning for beginners"
+
+# Get current information
+wolfw "latest developments in quantum computing"
+
+# Find tutorials and guides
+wolfw "React hooks tutorial for beginners"
 ```
 
 ---

@@ -139,6 +139,27 @@ wolf --image "C:\path\to\image.png" "describe what you see in this image"
 
 ---
 
+### 11. Web Search Test (wolfw)
+```powershell
+# Search for current technology information
+wolfw "artificial intelligence trends 2025"
+
+# Compare technologies
+wolfw "best Python web frameworks comparison"
+
+# Find tutorials and guides
+wolfw "machine learning for beginners"
+```
+**Expected**:
+- Shows "🔍 Searching the web..." message
+- Calls `search_web` tool with DuckDuckGo
+- Returns up to 10 search results
+- LLM synthesizes results into organized summary
+- Includes source URLs and key takeaways
+- No confirmation needed (safe operation)
+
+---
+
 ## 🔍 Troubleshooting
 
 ### Error: "Ollama API error: Connection refused"
@@ -167,10 +188,10 @@ ollama pull gpt-oss:20b  # Best option (Context Length: 131072)
 
 ---
 
-## 📊 What to Check
+## 📋 What to Check
 
 ✅ **Tool Registry Integration**
-- All 10 tools listed
+- All 11 tools listed (including search_web)
 - Correct risk levels (safe/modifying/destructive)
 
 ✅ **Permission System**
@@ -199,13 +220,15 @@ ollama pull gpt-oss:20b  # Best option (Context Length: 131072)
 
 ## 🎯 Success Criteria
 
-If you can complete tests 1-5 successfully, your Wolf CLI MVP is **fully functional**!
+If you can complete tests 1-11 successfully, your Wolf CLI is **fully functional**!
 
-- ✅ Tools are registered and callable
+- ✅ Tools are registered and callable (11 tools total)
 - ✅ Permission system works
 - ✅ LLM orchestration loop works
 - ✅ File operations execute
 - ✅ User confirmations work
+- ✅ Web search with wolfw works (DuckDuckGo)
+- ✅ Vision mode with wolfv works (screenshot capture)
 
 ---
 
@@ -228,7 +251,7 @@ If you can complete tests 1-5 successfully, your Wolf CLI MVP is **fully functio
 
 After MVP testing passes:
 1. Implement OpenRouter provider #future-use
-2. Add web search (DuckDuckGo)
+2. ✅ Add web search (DuckDuckGo) - COMPLETED in v0.3.1 via `wolfw`
 3. Add HTTP request tool
 4. Add Git integration
 5. Add conversation history

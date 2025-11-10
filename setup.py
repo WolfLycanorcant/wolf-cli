@@ -34,6 +34,7 @@ setup(
         "console_scripts": [
             "wolf=wolf.cli_wrapper:main",
             "wolfv=wolf.cli_wrapper:main_vision",
+            "wolfw=wolf.cli_wrapper:main_web",
         ],
     },
     classifiers=[

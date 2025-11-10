@@ -11,7 +11,7 @@ from .permission_manager import PermissionManager, RiskLevel
 from .tool_registry import get_registry, ToolSchema
 from .utils.validation import validate_tool_params
 from .utils.logging_utils import log_tool, log_error, log_warn, log_debug
-from .providers import file_ops, shell_client
+from .providers import file_ops, shell_client, search_web
 
 
 class ToolExecutor:
@@ -37,6 +37,9 @@ class ToolExecutor:
         # Shell & system
         self.registry.get("execute_command").handler = lambda command, **kwargs: shell_client.execute_shell_command(command, **kwargs)
         self.registry.get("get_system_info").handler = lambda: shell_client.get_system_info()
+        
+        # Web & information
+        self.registry.get("search_web").handler = lambda query, max_results=10: search_web(query=query, max_results=max_results)
     
     def execute(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """

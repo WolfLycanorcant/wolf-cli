@@ -138,7 +138,7 @@ def wolf(
         )
         
         # Run orchestration
-        console.print(f"[cyan]🐺 Wolf CLI[/cyan] - Provider: {provider}, Model: {orchestrator.model}")
+        console.print(f"[cyan][Wolf CLI][/cyan] - Provider: {provider}, Model: {orchestrator.model}")
         console.print()
         
         result = orchestrator.run(
@@ -175,7 +175,7 @@ def wolf(
 
 def _print_tools(registry) -> None:
     """Print available tools in a formatted table"""
-    table = Table(title="🐺 Wolf CLI - Available Tools")
+    table = Table(title="Wolf CLI - Available Tools")
     table.add_column("Tool Name", style="cyan", no_wrap=True)
     table.add_column("Description", style="white")
     table.add_column("Risk Level", style="magenta")
@@ -261,6 +261,108 @@ def main_vision():
     
     except Exception as exc:
         console.print(f"[red]Fatal error in wolfv:[/red] {exc}")
+        import traceback
+        console.print("\n[dim]Traceback:[/dim]")
+        console.print(traceback.format_exc())
+        sys.exit(1)
+
+
+def main_web():
+    """
+    Entry point for wolfw console script.
+    
+    Performs a web search using DuckDuckGo and has the LLM summarize results.
+    """
+    try:
+        # Get the prompt from command line
+        original_args = sys.argv[1:]
+        
+        if not original_args:
+            console.print("[yellow]No search query provided.[/yellow]")
+            console.print("\nUsage examples:")
+            console.print("  wolfw \"artificial intelligence trends\"")
+            console.print("  wolfw \"python programming best practices\"")
+            sys.exit(1)
+        
+        # Join all arguments as the search query
+        user_prompt = " ".join(original_args)
+        
+        console.print("[cyan]🔍 Searching the web...[/cyan]")
+        console.print()
+        
+        # Load configuration
+        config = get_config()
+        config.ensure_initialized()
+        
+        # Prepare a web-search-focused system prompt and temporarily override config
+        web_system_prompt = (
+            "You are in web-search mode. Use the search_web tool to retrieve up to 10 DuckDuckGo results for the user's query. "
+            "Then synthesize a clear, helpful summary with the most relevant findings. Include key takeaways as bullet points and "
+            "provide source URLs. If no results are found, explain and suggest alternative queries. Be concise and informative."
+        )
+        original_system_prompt = config.get("system_prompt")
+        config.set("system_prompt", web_system_prompt)
+        config.save()
+        
+        try:
+            # Setup logging
+            log_file = "wolf-cli.log"
+            setup_logging(log_file=log_file, verbose=False)
+            
+            # Initialize core components
+            registry = get_registry()
+            
+            # Use interactive trust level for web searches
+            permission_manager = PermissionManager(
+                trust_level=TrustLevel.INTERACTIVE,
+                custom_allowlist=config.get("custom_allowlist", []),
+                custom_denylist=config.get("custom_denylist", []),
+            )
+            
+            # Initialize tool executor
+            tool_executor = ToolExecutor(permission_manager=permission_manager)
+            
+            # Initialize orchestrator
+            orchestrator = Orchestrator(
+                tool_executor=tool_executor,
+                provider="ollama",
+                model=None,
+                max_tool_iterations=config.get("max_tool_iterations", 6),
+            )
+            
+            # Run orchestration
+            console.print(f"[cyan]🔍 Web Search[/cyan] - Provider: ollama, Model: {orchestrator.model}")
+            console.print()
+            
+            result = orchestrator.run(
+                prompt=user_prompt,
+                images=None,
+            )
+            
+            # Display result
+            if result.get("ok"):
+                assistant_text = result.get("text", "")
+                if assistant_text:
+                    console.print("[green]Results:[/green]")
+                    console.print(assistant_text)
+                else:
+                    console.print("[yellow]No results found.[/yellow]")
+                sys.exit(0)
+            else:
+                error_msg = result.get("error", "Unknown error")
+                console.print(f"[red]Error:[/red] {error_msg}")
+                sys.exit(1)
+        finally:
+            # Restore original system prompt
+            config.set("system_prompt", original_system_prompt)
+            config.save()
+    
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Interrupted by user[/yellow]")
+        sys.exit(130)
+    
+    except Exception as exc:
+        console.print(f"[red]Fatal error in wolfw:[/red] {exc}")
         import traceback
         console.print("\n[dim]Traceback:[/dim]")
         console.print(traceback.format_exc())
