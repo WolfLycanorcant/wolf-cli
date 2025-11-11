@@ -5,7 +5,7 @@
 Wolf CLI is a production-ready terminal assistant that combines the power of Large Language Models (LLMs) with safe, controlled system access through a comprehensive tool ecosystem. It runs locally using Ollama and provides intelligent automation for file operations, system tasks, and more.
 
 **Platform Support**: 
-- ✅ **Windows 11** - Fully supported with cross-platform config paths
+- ✅ **Windows 11** - Fully supported
 
 > **Note:** This project is a fork of [shell_gpt](https://github.com/TheR1D/shell_gpt) by TheR1D, extended with comprehensive tool-calling capabilities, enhanced safety controls, and cross-platform shell integration.
 
