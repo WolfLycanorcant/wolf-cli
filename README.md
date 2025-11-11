@@ -1,6 +1,6 @@
 # 🐺 Wolf CLI
 
-**A powerful cross-platform AI-powered command-line assistant with tool-calling, safety controls, and local LLM support.**
+**A powerful Windows 11 AI-powered command-line assistant with tool-calling, safety controls, and local LLM support.**
 
 Wolf CLI is a production-ready terminal assistant that combines the power of Large Language Models (LLMs) with safe, controlled system access through a comprehensive tool ecosystem. It runs locally using Ollama and provides intelligent automation for file operations, system tasks, and more.
 
