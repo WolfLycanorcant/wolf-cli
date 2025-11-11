@@ -171,13 +171,13 @@ The `wolfw` command performs DuckDuckGo web searches and has the LLM synthesize 
 
 ```bash
 # Search the web for a topic
-wolfw "artificial intelligence trends 2025"
+wolfw 'artificial intelligence trends 2025'
 
 # Ask a question that requires web research
-wolfw "what are the best Python web frameworks in 2024?"
+wolfw 'what are the best Python web frameworks in 2024?'
 
 # Multi-word queries work naturally
-wolfw "machine learning best practices"
+wolfw 'machine learning best practices'
 ```
 
 **How it works:**
@@ -243,19 +243,19 @@ wolf 'list all .py files, then create a summary.txt with their names'
 wolfw "artificial intelligence trends 2025"
 
 # Compare programming frameworks
-wolfw "best Python web frameworks comparison"
+wolfw 'best Python web frameworks comparison'
 
 # Find solutions and best practices
-wolfw "how to optimize database queries"
+wolfw 'how to optimize database queries'
 
 # Research specific topics
-wolfw "machine learning for beginners"
+wolfw 'machine learning for beginners'
 
 # Get current information
-wolfw "latest developments in quantum computing"
+wolfw 'latest developments in quantum computing'
 
 # Find tutorials and guides
-wolfw "React hooks tutorial for beginners"
+wolfw 'React hooks tutorial for beginners'
 ```
 
 ---
