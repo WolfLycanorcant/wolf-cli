@@ -287,7 +287,7 @@ def main_web():
         # Join all arguments as the search query
         user_prompt = " ".join(original_args)
         
-        console.print("[cyan]🔍 Searching the web...[/cyan]")
+        console.print("[cyan]Searching the web...[/cyan]")
         console.print()
         
         # Load configuration
@@ -331,7 +331,7 @@ def main_web():
             )
             
             # Run orchestration
-            console.print(f"[cyan]🔍 Web Search[/cyan] - Provider: ollama, Model: {orchestrator.model}")
+            console.print(f"[cyan]Web Search[/cyan] - Provider: ollama, Model: {orchestrator.model}")
             console.print()
             
             result = orchestrator.run(

@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Privacy-respecting searches via DuckDuckGo
 - **New Provider**: `wolf/providers/web_search.py`
   - Implements `search_web(query, max_results=10)` function
-  - Uses `ddgs` library with fallback to `duckduckgo-search`
+  - Uses `ddgs` library
   - Robust error handling and graceful fallbacks
   - Normalizes results to consistent schema (title, url, snippet)
 - **Web & Information Category**: New tool category in registry

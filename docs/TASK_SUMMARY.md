@@ -358,7 +358,6 @@ psutil>=5.9.8          # System info
 send2trash>=1.8.2      # Safe file deletion
 pillow>=10.2.0         # Image handling
 ddgs>=3.1.0            # DuckDuckGo search (wolfw command)
-duckduckgo-search>=5.1.0  # Fallback compatibility
 
 # Optional (Phase 2+)
 pyperclip>=1.8.2

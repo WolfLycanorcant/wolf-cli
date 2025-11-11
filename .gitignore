@@ -33,6 +33,9 @@ Thumbs.db
 # Launcher scripts
 wolf.sh
 
+# PyInstaller spec file (generated/customized per build)
+wolf.spec
+
 # Test files (generated during testing)
 hello.txt
 test.txt

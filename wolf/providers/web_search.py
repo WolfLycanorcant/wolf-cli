@@ -1,7 +1,7 @@
 """
 Wolf CLI Web Search Provider
 
-Integrates DuckDuckGo search via duckduckgo-search library.
+Integrates DuckDuckGo search via ddgs library.
 """
 
 import logging
@@ -10,10 +10,7 @@ from typing import Dict, Any, List
 try:
     from ddgs import DDGS
 except ImportError:
-    try:
-        from duckduckgo_search import DDGS
-    except ImportError:
-        DDGS = None
+    DDGS = None
 
 logger = logging.getLogger(__name__)
 
@@ -70,7 +67,7 @@ def search_web(query: str, max_results: int = 10) -> Dict[str, Any]:
             "query": query,
             "results": [],
             "count": 0,
-            "error": "duckduckgo-search library not installed"
+            "error": "ddgs library not installed. Install with: pip install ddgs"
         }
     
     try:
