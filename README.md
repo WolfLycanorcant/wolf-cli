@@ -30,6 +30,7 @@ Wolf CLI is a production-ready terminal assistant that combines the power of Lar
 - **Verbose Mode**: Detailed debug information when needed
 - **Configuration**: Flexible config system with .env support
 - **Transparent**: See exactly what tools are being called and why
+- **Cursor Editor Integration**: Built-in Cursor API for code-aware operations
 
 ---
 
@@ -68,7 +69,7 @@ pip install -e .
 
 
 
-ollama pull gpt-oss:20b (Context Length: 131072)
+ollama pull granite3.1-moe:3b
 
 
 
@@ -193,6 +194,52 @@ wolfw 'machine learning best practices'
 - Graceful fallback if no results found
 - Respects system prompt and model settings
 
+### Cursor Editor API Integration
+
+Wolf CLI includes a built-in Cursor API server that enables code-aware operations when using the Cursor editor. If you have Cursor installed, you can start the API server to unlock additional capabilities.
+
+**Starting the Cursor API Server:**
+
+```bash
+# From the project root directory, run:
+run_cursor_api.bat
+```
+
+The server will start on `http://localhost:5005` and enable Wolf CLI to interact with your Cursor editor.
+
+**Features:**
+- Get current editor state (file, cursor position, open tabs)
+- Read and write files through Cursor
+- Search code with context and line numbers
+- List project files
+- Run code snippets
+- Describe codebase structure
+
+**Usage Examples:**
+```bash
+# Get current file and editor state
+wolf "what file am I currently editing in Cursor?"
+
+# Read a file through Cursor
+wolf "read the current file in Cursor"
+
+# Search for TODO comments
+wolf "search for 'TODO' in my Cursor project"
+
+# List Python files
+wolf "list all Python files in my project"
+
+# Describe codebase
+wolf "describe my codebase structure"
+```
+
+**Requirements:**
+- Cursor editor must be installed and running
+- Cursor API server must be running (start with `run_cursor_api.bat`)
+- Server runs on `http://localhost:5005` by default
+
+**Note:** The Cursor API integration is optional. Wolf CLI works perfectly without it, but enabling it adds powerful code-aware capabilities.
+
 ---
 
 ## 🎯 Examples
@@ -289,7 +336,7 @@ Or `~/.config/wolf-cli/config.json` if `XDG_CONFIG_HOME` is not set
 ```json
 {
   "model_provider": "ollama",
-  "ollama_model": "gpt-oss:20b (Context Length: 131072)",
+  "ollama_model": "granite3.1-moe:3b",
   "ollama_base_url": "http://localhost:11434",
   "openrouter_api_key": "", #future-use
   "openrouter_model": "openrouter/auto", #future-use
@@ -324,7 +371,7 @@ You can also configure Wolf CLI using environment variables or a `.env` file:
 
 ```bash
 WOLF_MODEL_PROVIDER=ollama
-WOLF_OLLAMA_MODEL=gpt-oss:20b (Context Length: 131072)
+WOLF_OLLAMA_MODEL=granite3.1-moe:3b
 WOLF_OLLAMA_BASE_URL=http://localhost:11434
 WOLF_OPENROUTER_API_KEY= #future-use
 WOLF_TRUST_LEVEL=interactive
@@ -412,13 +459,13 @@ Error: 400 Client Error: Bad Request
 
 **Solution:**
 Not all Ollama models support function calling. Recommended models:
-- `gpt-oss:20b` (default, best instruction-following, Context Length: 131072)
+- `granite3.1-moe:3b` (default, excellent tool support)
 - `llama3.2:latest` (smaller, faster, less reliable)
 - `qwen3:8b` (good tool support)
 
 ```powershell
 # Pull a recommended model
-ollama pull gpt-oss:20b (Context Length: 131072)
+ollama pull granite3.1-moe:3b
 ```
 
 ### Permission Denied in Safe Mode
