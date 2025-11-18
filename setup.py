@@ -28,13 +28,16 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/wolf-cli",  # Update with actual repo URL
     packages=find_packages(),
-    python_requires=">=3.11",
+    python_requires=">=3.10",
     install_requires=requirements,
     entry_points={
         "console_scripts": [
             "wolf=wolf.cli_wrapper:main",
             "wolfv=wolf.cli_wrapper:main_vision",
+            "wolfc=wolf.cli_wrapper:main_camera",
+            "wolfcamera=wolf.cli_wrapper:main_camera",
             "wolfw=wolf.cli_wrapper:main_web",
+            "wolfem=wolf.cli_wrapper:main_email",
         ],
     },
     classifiers=[

@@ -1,0 +1,7 @@
+pyautogui
+pyperclip
+keyboard
+pywin32
+fastapi
+pydantic
+uvicorn

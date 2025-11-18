@@ -11,7 +11,16 @@ from .permission_manager import PermissionManager, RiskLevel
 from .tool_registry import get_registry, ToolSchema
 from .utils.validation import validate_tool_params
 from .utils.logging_utils import log_tool, log_error, log_warn, log_debug
-from .providers import file_ops, shell_client, search_web
+from .providers import file_ops, shell_client, search_web, email
+from .providers.cursor_client import (
+    cursor_get_editor_state,
+    cursor_get_file_content,
+    cursor_write_file,
+    cursor_list_files,
+    cursor_search_files,
+    cursor_run_code,
+    cursor_describe_codebase,
+)
 
 
 class ToolExecutor:
@@ -40,6 +49,19 @@ class ToolExecutor:
         
         # Web & information
         self.registry.get("search_web").handler = lambda query, max_results=10: search_web(query=query, max_results=max_results)
+
+        # Email
+        self.registry.get("list_email_mailboxes").handler = email.list_mailboxes
+        self.registry.get("read_email_mailbox").handler = email.read_mailbox
+        
+        # Cursor Editor API
+        self.registry.get("cursor_get_editor_state").handler = cursor_get_editor_state
+        self.registry.get("cursor_get_file_content").handler = cursor_get_file_content
+        self.registry.get("cursor_write_file").handler = cursor_write_file
+        self.registry.get("cursor_list_files").handler = cursor_list_files
+        self.registry.get("cursor_search_files").handler = cursor_search_files
+        self.registry.get("cursor_run_code").handler = cursor_run_code
+        self.registry.get("cursor_describe_codebase").handler = cursor_describe_codebase
     
     def execute(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """

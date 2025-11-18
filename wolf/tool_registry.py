@@ -66,6 +66,8 @@ class ToolRegistry:
             "File Operations": [],
             "Shell & System": [],
             "Web & Information": [],
+            "Email": [],
+            "Cursor Editor": [],
         }
         
         for name in self._tools.keys():
@@ -73,6 +75,10 @@ class ToolRegistry:
                 categories["File Operations"].append(name)
             elif name.startswith(("execute_", "get_command_", "get_system_")):
                 categories["Shell & System"].append(name)
+            elif name.startswith("list_email_") or name.startswith("read_email_"):
+                categories["Email"].append(name)
+            elif name.startswith("cursor_"):
+                categories["Cursor Editor"].append(name)
             else:
                 categories["Web & Information"].append(name)
         
@@ -316,6 +322,180 @@ class ToolRegistry:
                 "required": ["query"],
             },
             returns="JSON with keys: ok (bool), query (str), results (list of dicts with title/url/snippet), count (int), error (str if ok=False)",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        # ====================
+        # EMAIL (THUNDERBIRD)
+        # ====================
+
+        self.register(ToolSchema(
+            name="list_email_mailboxes",
+            description="List all available email mailboxes from the local Thunderbird profile.",
+            parameters={
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+            returns="JSON with a list of mailbox names.",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="read_email_mailbox",
+            description="Read the most recent emails from a specified Thunderbird mailbox.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "mailbox_name": {
+                        "type": "string",
+                        "description": "The name of the mailbox to read (e.g., 'Inbox').",
+                    },
+                    "count": {
+                        "type": "integer",
+                        "description": "The maximum number of emails to read.",
+                        "default": 10,
+                    },
+                },
+                "required": ["mailbox_name"],
+            },
+            returns="JSON with a list of emails, each with id, subject, from, and date.",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        # ====================
+        # CURSOR EDITOR API
+        # ====================
+
+        self.register(ToolSchema(
+            name="cursor_get_editor_state",
+            description="Get the current state of the Cursor editor (current file, cursor position, open tabs, project root). Requires Cursor API to be running on port 5005.",
+            parameters={
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+            returns="JSON with keys: success (bool), current_file (str), cursor_position (dict), selection (dict), open_tabs (list), project_root (str), error (str if success=False)",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_get_file_content",
+            description="Get the content of a file through Cursor API. This reads files as they appear in the Cursor editor context.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "Path to the file to read",
+                    },
+                },
+                "required": ["file_path"],
+            },
+            returns="JSON with keys: success (bool), file_path (str), content (str), size (int), error (str if success=False)",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_write_file",
+            description="Write content to a file through Cursor API. This will write files in the Cursor editor context.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "Path to the file to write",
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Content to write to the file",
+                    },
+                },
+                "required": ["file_path", "content"],
+            },
+            returns="JSON with keys: success (bool), file_path (str), bytes_written (int), error (str if success=False)",
+            risk_level=RiskLevel.MODIFYING,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_list_files",
+            description="List files in a directory through Cursor API. This lists files as they appear in the Cursor project context.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "directory": {
+                        "type": "string",
+                        "description": "Directory path to list (default: current directory)",
+                        "default": ".",
+                    },
+                },
+                "required": [],
+            },
+            returns="JSON with keys: success (bool), directory (str), files (list), count (int), error (str if success=False)",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_search_files",
+            description="Search for text in files through Cursor API. Returns matches with line numbers and context.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Text to search for",
+                    },
+                    "directory": {
+                        "type": "string",
+                        "description": "Directory to search in (default: current directory)",
+                        "default": ".",
+                    },
+                },
+                "required": ["query"],
+            },
+            returns="JSON with keys: success (bool), query (str), directory (str), results (list of matches with file, line, content), count (int), error (str if success=False)",
+            risk_level=RiskLevel.SAFE,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_run_code",
+            description="Execute code snippets through Cursor API. Useful for testing code or running quick scripts.",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "description": "Code to execute",
+                    },
+                    "language": {
+                        "type": "string",
+                        "description": "Programming language (optional, auto-detect if not provided)",
+                    },
+                },
+                "required": ["code"],
+            },
+            returns="JSON with keys: success (bool), output (str), error (str if execution failed)",
+            risk_level=RiskLevel.MODIFYING,
+            handler=None,
+        ))
+
+        self.register(ToolSchema(
+            name="cursor_describe_codebase",
+            description="Get a description of the codebase structure through Cursor API. Analyzes project files and provides an overview.",
+            parameters={
+                "type": "object",
+                "properties": {},
+                "required": [],
+            },
+            returns="JSON with keys: success (bool), description (str), total_files (int), code_files (int), error (str if success=False)",
             risk_level=RiskLevel.SAFE,
             handler=None,
         ))

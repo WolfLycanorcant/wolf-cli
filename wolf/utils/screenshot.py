@@ -8,9 +8,42 @@ import os
 import sys
 import ctypes
 from datetime import datetime
+from wolf.utils.paths import get_screenshots_dir
 from PIL import ImageGrab
 import pathlib
+import os
+from typing import Optional
 
+import base64
+from io import BytesIO
+
+def get_most_recent_screenshot(screenshots_dir: Optional[str] = None) -> Optional[tuple[str, str]]:
+    """
+    Finds the most recently modified file in the screenshots directory.
+
+    Args:
+        screenshots_dir (Optional[str]): The directory to search. If None, uses the default.
+
+    Returns:
+        Optional[tuple[str, str]]: A tuple containing the absolute path to the most recent file
+                                   and the base64-encoded image data, or None if the directory is empty.
+    """
+    if screenshots_dir is None:
+        screenshots_dir = get_screenshots_dir()
+    
+    try:
+        files = [os.path.join(screenshots_dir, f) for f in os.listdir(screenshots_dir) if os.path.isfile(os.path.join(screenshots_dir, f))]
+        if not files:
+            return None
+        
+        latest_file = max(files, key=os.path.getmtime)
+        
+        with open(latest_file, "rb") as f:
+            img_base64 = base64.b64encode(f.read()).decode('utf-8')
+            
+        return os.path.abspath(latest_file), img_base64
+    except FileNotFoundError:
+        return None
 
 def _ensure_dpi_awareness():
     """
@@ -34,7 +67,7 @@ def _ensure_dpi_awareness():
 
 def take_screenshot() -> str:
     """
-    Capture a full-screen screenshot and save it to the current working directory.
+    Capture a full-screen screenshot and save it to the wolf-cli-screenshots directory.
     
     Returns:
         str: Absolute path to the saved screenshot PNG file.
@@ -53,21 +86,41 @@ def take_screenshot() -> str:
     _ensure_dpi_awareness()
     
     # Capture all screens
-    img = ImageGrab.grab(all_screens=True)
+    try:
+        img = ImageGrab.grab(all_screens=True)
+        if img is None:
+            raise Exception("Failed to capture screenshot: ImageGrab returned None")
+    except Exception as e:
+        raise Exception(f"Failed to capture screenshot: {e}") from e
     
     # Generate filename with timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     filename = f"wolf-screenshot_{timestamp}.png"
     
     # Determine the screenshot directory
-    pictures_dir = pathlib.Path.home() / "Pictures"
-    screenshot_dir = pictures_dir / "wolf-cli-screenshots"
+    screenshot_dir = get_screenshots_dir()
     
     # Create the directory if it doesn't exist
-    screenshot_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        screenshot_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        raise Exception(f"Failed to create screenshot directory '{screenshot_dir}': {e}") from e
+    
+    # Resolve to absolute path
+    path = (screenshot_dir / filename).resolve()
     
     # Save to the designated screenshot directory
-    path = screenshot_dir / filename
-    img.save(path, "PNG")
+    try:
+        img.save(str(path), "PNG")
+    except Exception as e:
+        raise Exception(f"Failed to save screenshot to '{path}': {e}") from e
+    
+    # Verify the file was actually created
+    if not path.exists():
+        raise Exception(f"Screenshot file was not created at '{path}'")
+    
+    if path.stat().st_size == 0:
+        raise Exception(f"Screenshot file was created but is empty at '{path}'")
     
     return str(path)
+

@@ -24,8 +24,8 @@ Make sure Ollama is running:
 ollama serve
 
 # In another terminal, pull the recommended models
-ollama pull gpt-oss:20b  # Recommended (Context Length: 131072, best reliability)
-ollama pull qwen3-vl:8b  # Recommended
+ollama pull granite3.1-moe:3b  # Recommended (excellent tool support)
+ollama pull qwen3-vl:8b  # Vision model (for wolfv command)
 ```
 
 ## 🧪 Test Scenarios
@@ -160,6 +160,41 @@ wolfw "machine learning for beginners"
 
 ---
 
+### 12. Cursor API Integration Test
+```powershell
+# Get current editor state
+wolf "what file am I editing in Cursor?"
+
+# Read current file
+wolf "read the current file in Cursor"
+
+# Search for patterns
+wolf "search for 'TODO' in my Cursor project"
+
+# List files
+wolf "list all Python files in my project"
+```
+**Expected**:
+- If Cursor API is running: Returns editor state, file content, search results, etc.
+- If not running: Returns helpful error message but doesn't crash
+- No confirmation needed (safe operations)
+
+---
+
+### 13. Environment Configuration Test
+```powershell
+# Create .env file
+echo WOLF_OLLAMA_MODEL=granite3.1-moe:3b > .env
+
+# Run Wolf CLI
+wolf "what model are you using?"
+```
+**Expected**:
+- Should mention `granite3.1-moe:3b` (from .env file)
+- .env file values override config.json
+
+---
+
 ## 🔍 Troubleshooting
 
 ### Error: "Ollama API error: Connection refused"
@@ -171,11 +206,10 @@ ollama serve
 ### Error: "Model doesn't support tools" or "400 Bad Request"
 ```powershell
 # Pull a recommended model that supports function calling
-ollama pull gpt-oss:20b  # Best option (Context Length: 131072)
+ollama pull granite3.1-moe:3b  # Recommended (excellent tool support)
 
-# Then update your config to use it:
-# Edit: C:\Users\Administrator\wolf\AI\WORKBENCH\.wolf-cli-config.json
-# Set "ollama_model": "gpt-oss:20b"
+# Or use .env file to configure:
+# Create .env file with: WOLF_OLLAMA_MODEL=granite3.1-moe:3b
 ```
 
 ### Permission denied in safe mode
@@ -191,7 +225,7 @@ ollama pull gpt-oss:20b  # Best option (Context Length: 131072)
 ## 📋 What to Check
 
 ✅ **Tool Registry Integration**
-- All 11 tools listed (including search_web)
+- All 18 tools listed (including search_web and 7 Cursor API tools)
 - Correct risk levels (safe/modifying/destructive)
 
 ✅ **Permission System**
@@ -220,15 +254,17 @@ ollama pull gpt-oss:20b  # Best option (Context Length: 131072)
 
 ## 🎯 Success Criteria
 
-If you can complete tests 1-11 successfully, your Wolf CLI is **fully functional**!
+If you can complete tests 1-13 successfully, your Wolf CLI is **fully functional**!
 
-- ✅ Tools are registered and callable (11 tools total)
+- ✅ Tools are registered and callable (18 tools total)
 - ✅ Permission system works
 - ✅ LLM orchestration loop works
 - ✅ File operations execute
 - ✅ User confirmations work
 - ✅ Web search with wolfw works (DuckDuckGo)
 - ✅ Vision mode with wolfv works (screenshot capture)
+- ✅ Cursor API integration works (7 tools available)
+- ✅ Environment configuration works (.env file support)
 
 ---
 
@@ -237,7 +273,7 @@ If you can complete tests 1-11 successfully, your Wolf CLI is **fully functional
 1. **Config file**:
    - Windows: `%APPDATA%\wolf-cli\config.json`
 2. **Log file**: `wolf-cli.log` (in current directory)
-3. **Model**: Defaults to `gpt-oss:20b` (v0.2.0+)
+3. **Model**: Defaults to `granite3.1-moe:3b` (v0.3.3+)
 4. **Ollama URL**: `http://localhost:11434` (configurable)
 5. **System Prompt**: Intelligent prompt prevents unnecessary tool calls for greetings
 
@@ -259,4 +295,4 @@ After MVP testing passes:
 
 ---
 
-*Last Updated: 2025-11-10*
+*Last Updated: 2025-11-18*

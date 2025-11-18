@@ -33,17 +33,29 @@ Thumbs.db
 # Launcher scripts
 wolf.sh
 
-# PyInstaller spec file (generated/customized per build)
-wolf.spec
+# PyInstaller spec files (generated/customized per build)
+*.spec
 
 # Test files (generated during testing)
 hello.txt
 test.txt
 auto-test.txt
 
+# Keep test_install directory but ignore build artifacts inside
+test_install/build/
+test_install/dist/
+test_install/*.egg-info/
+
+# Executables (build artifacts - can be regenerated)
+*.exe
+# But keep test_install executables for distribution
+!test_install/*.exe
+
 # Environment variables
 .env
 .env.local
+# Keep example file
+!.env.example
 
 # Config (keep the example, ignore local overrides)
 .wolf-cli-config.json

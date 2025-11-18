@@ -10,7 +10,7 @@
 
 ### 1. **Architecture**
 - **Base Integration**: Standalone CLI tool (not a wrapper - independent implementation)
-- **Primary LLM**: Ollama with `gpt-oss:20b` (local, 20B parameter model with excellent tool support, Context Length: 131072)
+- **Primary LLM**: Ollama with `granite3.1-moe:3b` (local, 3B parameter model with excellent tool support)
 - **Alternative LLM**: OpenRouter API (planned for Phase 2) #future-use
 - **Platform**: Windows 11 (PowerShell 7.5.4) - ✅ Fully tested
 - **Project Location**: `C:\Users\Administrator\wolf\AI\WORKBENCH\wolf-cli`
@@ -188,13 +188,15 @@ wolf-cli/
 **Location**:
 - **Windows**: `%APPDATA%\wolf-cli\config.json`
 
-**Load Order**: `Defaults → File → Env Vars → CLI Flags`
+**Load Order**: `Defaults → .env File → config.json → Environment Variables → CLI Flags`
+
+**Priority**: Environment variables from `.env` file override `config.json` values. This ensures `.env` file always takes precedence.
 
 **Default Config**:
 ```json
 {
   "model_provider": "ollama",
-  "ollama_model": "gpt-oss:20b",
+  "ollama_model": "granite3.1-moe:3b",
   "ollama_base_url": "http://localhost:11434",
   "openrouter_api_key": "", #future-use
   "openrouter_model": "openrouter/auto", #future-use
@@ -211,11 +213,15 @@ wolf-cli/
 
 ### Environment Variables
 - `WOLF_MODEL_PROVIDER` - Override model provider
-- `WOLF_OLLAMA_MODEL` - Override Ollama model
+- `WOLF_OLLAMA_MODEL` - Override Ollama model (default: `granite3.1-moe:3b`)
+- `WOLF_VISION_MODEL` - Override vision model (default: `qwen3-vl:8b`)
 - `WOLF_OLLAMA_BASE_URL` - Ollama API endpoint
+- `WOLF_CURSOR_API_URL` - Cursor API endpoint (default: `http://localhost:5005`)
 - `WOLF_OPENROUTER_API_KEY` - OpenRouter API key #future-use
 - `WOLF_TRUST_LEVEL` - Default trust level
 - `WOLF_TIMEOUT` - Command timeout in seconds
+
+**Note**: Environment variables can be set via `.env` file (recommended) or system environment variables. `.env` file values always override `config.json`.
 
 ---
 
@@ -227,7 +233,7 @@ wolf-cli/
 **Payload Structure**:
 ```json
 {
-  "model": "gpt-oss:20b (Context Length: 131072)",
+  "model": "granite3.1-moe:3b",
   "messages": [
     {"role": "system", "content": "<system_prompt from config>"},
     {"role": "user", "content": "create dog.txt", "images": ["<base64>"]}
@@ -323,6 +329,15 @@ for i in range(max_tool_iterations):
 ✅ **Web & Network** (1 tool)
 - search_web (DuckDuckGo) - via `wolfw` command
 
+✅ **Cursor Editor API** (7 tools) - v0.3.3
+- cursor_get_editor_state - Get current editor state
+- cursor_get_file_content - Read files via Cursor
+- cursor_write_file - Write files via Cursor
+- cursor_list_files - List project files
+- cursor_search_files - Search code with context
+- cursor_run_code - Execute code snippets
+- cursor_describe_codebase - Analyze project structure
+
 ### Deferred to Phase 2+
 ⏳ Additional Web & Network tools (HTTP requests, downloads, diagnostics)
 ⏳ Data processing tools
@@ -375,7 +390,7 @@ xmltodict>=0.13.0
 3. **Ollama** (installed and running)
    ```bash
    ollama serve  # Start Ollama server
-   ollama pull gpt-oss:20b  # Recommended model (Context Length: 131072)
+   ollama pull granite3.1-moe:3b  # Recommended model
    ```
 
 ### Installation Steps
@@ -498,10 +513,13 @@ wolf "what's in my current directory?"
 - [x] README documentation
 - [x] CHANGELOG with version history
 - [x] Comprehensive testing and validation
-- [x] Switched to `gpt-oss:20b` for better instruction-following
+- [x] Switched to `granite3.1-moe:3b` for excellent tool support
 - [x] Simple 'wolf' command installation
 - [x] Web search tool (DuckDuckGo) with `wolfw` command
 - [x] Vision mode with `wolfv` command
+- [x] Environment-based configuration (`.env` file support)
+- [x] Cursor Editor API integration (7 new tools)
+- [x] Standalone installer/uninstaller executables
 
 ### 📋 Installation
 ```bash
@@ -563,11 +581,12 @@ wolf "your prompt here"
 **2. "Model doesn't support tools" or "400 Bad Request"**
 - Not all Ollama models support function calling
 - **Recommended models**:
-  - `gpt-oss:20b` (default, best instruction-following, Context Length: 131072)
+  - `granite3.1-moe:3b` (default, excellent tool support)
+  - `gpt-oss:20b` (larger, Context Length: 131072, best instruction-following)
   - `llama3.2:latest` (smaller, faster, less reliable)
   - `qwen3:8b` (good tool support)
 - **Avoid**: llava, codellama (vision/code-focused, poor tool support)
-- Pull recommended model: `ollama pull gpt-oss:20b`
+- Pull recommended model: `ollama pull granite3.1-moe:3b`
 
 **3. "Permission denied errors"**
 - Check trust level: `--auto` or `--safe`
@@ -592,4 +611,4 @@ wolf "your prompt here"
 
 ---
 
-*Last Updated: 2025-11-10*
+*Last Updated: 2025-11-18*

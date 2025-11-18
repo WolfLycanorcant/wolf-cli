@@ -29,5 +29,8 @@ send2trash>=1.8.2
 pillow>=10.2.0
 rapidfuzz>=3.6.1
 
+# Computer Vision
+opencv-python>=4.8.0
+
 # Optional OCR
 # pytesseract>=0.3.10

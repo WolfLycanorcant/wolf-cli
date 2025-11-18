@@ -41,7 +41,7 @@ class Orchestrator:
         if model:
             self.model = model
         elif self.provider == "ollama":
-            self.model = self.config.get("ollama_model", "llama3.2:latest")
+            self.model = self.config.get("ollama_model", "granite3.1-moe:3b")
         else: #future-use
             self.model = self.config.get("openrouter_model", "openrouter/auto") #future-use
         
@@ -59,7 +59,7 @@ class Orchestrator:
         # Images will be handled by provider adapter
         return msg
     
-    def _call_llm(self, messages: List[Dict[str, Any]], images: Optional[List[str]] = None) -> Dict[str, Any]:
+    def _call_llm(self, messages: List[Dict[str, Any]], images: Optional[List[str]] = None, images_base64: Optional[List[str]] = None) -> Dict[str, Any]:
         """Call LLM provider"""
         if self.provider == "ollama":
             return ollama.chat(
@@ -68,6 +68,7 @@ class Orchestrator:
                 tools=self.tool_schemas,
                 base_url=self.base_url,
                 images=images,
+                images_base64=images_base64,
             )
         else:
             raise ValueError(f"Unsupported provider: {self.provider}")
@@ -103,7 +104,7 @@ class Orchestrator:
         
         return calls
     
-    def run(self, prompt: str, images: Optional[List[str]] = None) -> Dict[str, Any]:
+    def run(self, prompt: str, images: Optional[List[str]] = None, images_base64: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         Run the orchestration loop
         
@@ -132,7 +133,7 @@ class Orchestrator:
         user_msg = self._format_user_message(prompt, images)
         messages.append(user_msg)
         
-        log_info(f"Starting orchestration loop (max {self.max_tool_iterations} iterations)")
+        log_debug(f"Starting orchestration loop (max {self.max_tool_iterations} iterations)")
         
         # Tool-call loop
         for iteration in range(self.max_tool_iterations):
@@ -140,7 +141,7 @@ class Orchestrator:
             
             try:
                 # Call LLM (pass images only on first iteration)
-                response = self._call_llm(messages, images if iteration == 0 else None)
+                response = self._call_llm(messages, images if iteration == 0 else None, images_base64 if iteration == 0 else None)
                 
                 # Check for errors
                 if "error" in response:
@@ -221,11 +222,15 @@ class Orchestrator:
                 # No tool calls - this is the final response
                 assistant_text = assistant_message.get("content", "")
                 
+                # Handle None or empty content
+                if assistant_text is None:
+                    assistant_text = ""
+                
                 # Add final assistant message to history
                 if assistant_text:
                     messages.append({"role": "assistant", "content": assistant_text})
                 
-                log_info("Orchestration complete")
+                log_debug(f"Orchestration complete. Response length: {len(assistant_text)}")
                 
                 return {
                     "ok": True,

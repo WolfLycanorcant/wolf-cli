@@ -10,6 +10,20 @@ from pathlib import Path
 from typing import Union
 
 
+def get_screenshots_dir() -> Path:
+    """
+    Get the screenshots directory path.
+    Same directory as screenshots: ~/Pictures/wolf-cli-screenshots
+    Creates the directory if it doesn't exist.
+    
+    Returns:
+        Path: Absolute path to the screenshots directory
+    """
+    base = Path.home() / "Pictures" / "wolf-cli-screenshots"
+    base.mkdir(parents=True, exist_ok=True)
+    return base
+
+
 def get_config_dir(app_name: str = "wolf-cli") -> Path:
     """
     Get the OS-appropriate configuration directory for the application.
